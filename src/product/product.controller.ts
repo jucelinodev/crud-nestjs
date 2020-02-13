@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Put } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Put,
+  Delete,
+  Param,
+  HttpCode,
+} from '@nestjs/common'
+
 import { ProductService } from './product.service'
 import { Product } from './product.entity'
 import { CreateProductDto } from './dto/create-product.dto'
@@ -8,25 +18,31 @@ export class ProductController {
   constructor(private productService: ProductService) {}
 
   @Get()
-  index(): Promise<Product[]> {
-    return this.productService.getAllProducts()
+  async index(): Promise<Product[]> {
+    return await this.productService.getAllProducts()
   }
 
   @Get('/:id')
-  show(id: string): Promise<Product> {
-    return this.productService.getProductById(id)
+  async show(@Param('id') id: string) {
+    return await this.productService.getProductById(id)
   }
 
   @Post()
-  store(@Body() createProductDto: CreateProductDto): Promise<Product> {
-    return this.productService.createProduct(createProductDto)
+  async store(@Body() createProductDto: CreateProductDto): Promise<Product> {
+    return await this.productService.createProduct(createProductDto)
   }
 
   @Put('/:id')
-  update(
-    id: string,
+  async update(
+    @Param('id') id: string,
     @Body() createProductDto: CreateProductDto,
   ): Promise<Product> {
-    return this.productService.updateProductById(id, createProductDto)
+    return await this.productService.updateProductById(id, createProductDto)
+  }
+
+  @Delete('/:id')
+  @HttpCode(204)
+  async destroy(@Param('id') id: string): Promise<void> {
+    await this.productService.deleteProductById(id)
   }
 }

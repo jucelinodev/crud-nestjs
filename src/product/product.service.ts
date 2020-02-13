@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { Repository } from 'typeorm'
+import { Repository, DeleteResult } from 'typeorm'
 import { Product } from './product.entity'
 import { InjectRepository } from '@nestjs/typeorm'
 import { CreateProductDto } from './dto/create-product.dto'
@@ -16,8 +16,7 @@ export class ProductService {
   }
 
   async getProductById(id: string): Promise<Product> {
-    const product = await this.productRepository.findOne(id)
-    return product
+    return await this.productRepository.findOne(id)
   }
 
   async createProduct(createProductDto: CreateProductDto): Promise<Product> {
@@ -31,8 +30,10 @@ export class ProductService {
   ): Promise<Product> {
     const product = await this.productRepository.findOne(id)
     const result = this.productRepository.merge(product, createProductDto)
-    return this.productRepository.save(result)
+    return await this.productRepository.save(result)
   }
 
-  //deleteProductById(){}
+  async deleteProductById(id: string): Promise<void> {
+    await this.productRepository.delete(id)
+  }
 }
