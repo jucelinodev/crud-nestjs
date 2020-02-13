@@ -12,6 +12,11 @@ export class ProductController {
     return this.productService.getAllProducts()
   }
 
+  @Get('/:id')
+  async show(id: string): Promise<Product> {
+    return this.productService.getProductById(id)
+  }
+
   @Post()
   async store(@Body() createProductDto: CreateProductDto): Promise<Product> {
     return this.productService.createProduct(createProductDto)
