@@ -25,7 +25,14 @@ export class ProductService {
     return await this.productRepository.save(product)
   }
 
-  //updateProductById(){}
+  async updateProductById(
+    id: string,
+    createProductDto: CreateProductDto,
+  ): Promise<Product> {
+    const product = await this.productRepository.findOne(id)
+    const result = this.productRepository.merge(product, createProductDto)
+    return this.productRepository.save(result)
+  }
 
   //deleteProductById(){}
 }
